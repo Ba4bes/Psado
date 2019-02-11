@@ -8,7 +8,7 @@ function Get-PSADORelease {
         [Parameter()]
         [string]$ReleaseName,
         [Parameter()]
-        [string]$SourceRepo,
+        [string]$SourceRelease,
         [Parameter()]
         [string]$token,
         [Parameter()]
@@ -36,7 +36,7 @@ function Get-PSADORelease {
         $NamedReleases = [ordered] @{
             Name           = $Project.Name
             ID             = $Project.id
-            Sourcerepo     = $Project.releasedefinition.name
+            SourceRelease     = $Project.releasedefinition.name
             Status         = $Project.Status
             CreatedOn      = $Project.CreatedOn
             ModifiedOn     = $Project.ModifiedOn
@@ -61,9 +61,9 @@ function Get-PSADORelease {
         $collectionVariable | where {$_.name -eq $ReleaseName}
         return
     }
-    elseif ($SourceRepo) {
+    elseif ($SourceRelease) {
         Write-verbose "hit SourceRepo-loop"
-        $collectionVariable | where {$_.Sourceproject -eq $Sourcerepo}
+        $collectionVariable | where {$_.SourceRelease -eq $SourceRelease}
         return
     }
     else {
