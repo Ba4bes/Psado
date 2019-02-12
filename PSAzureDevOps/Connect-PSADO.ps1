@@ -30,17 +30,17 @@ function Connect-PSADO {
             Write-error "Authentication failed. Please check CompanyName, username, token and permissions"
         }
 
-        if ($PSDefaultParameterValues.ContainsKey("*-PSADO*:Token")) {
-            $PSDefaultParameterValues.Item("*-PSADO*:Token") = $Token
+        if ($Global:PSDefaultParameterValues.ContainsKey("*-PSADO*:Token")) {
+            $Global:PSDefaultParameterValues.Item("*-PSADO*:Token") = $Token
         }
         else {
-            $PSDefaultParameterValues.Add("*-PSADO*:Token", $Token)
+            $Global:PSDefaultParameterValues.Add("*-PSADO*:Token", $Token)
         }
-        if ($PSDefaultParameterValues.ContainsKey("*-PSADO*:User")) {
-            $PSDefaultParameterValues.Item("*-PSADO*:User") = $User
+        if ($Global:PSDefaultParameterValues.ContainsKey("*-PSADO*:User")) {
+            $Global:PSDefaultParameterValues.Item("*-PSADO*:User") = $User
         }
         else {
-            $PSDefaultParameterValues.Add("*-PSADO*:User", $User)
+            $Global:PSDefaultParameterValues.Add("*-PSADO*:User", $User)
         }
 
         Write-output "Connection with Azure Devops for $CompanyName has been made"
