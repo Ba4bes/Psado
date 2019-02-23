@@ -4,7 +4,7 @@ function Get-PSADORelease {
         [Parameter(Mandatory = $true)]
         [string]$CompanyName,
         [Parameter(Mandatory = $true)]
-        [string]$ReleaseName,
+        [string]$ProjectName,
         [Parameter()]
         [string]$ReleaseName,
         [Parameter()]

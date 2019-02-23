@@ -17,6 +17,9 @@ function Get-PSADOProject {
     Process {
     $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
     $Projects = $result.value
+
+
+
     if ([string]::IsNullOrEmpty($ProjectName)) {
         return $Projects
     }
