@@ -1,5 +1,6 @@
 
 function Get-PSADORelease {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [string]$CompanyName,
@@ -8,66 +9,44 @@ function Get-PSADORelease {
         [Parameter()]
         [string]$ReleaseName,
         [Parameter()]
-        [string]$SourceRelease,
+        [string]$Pipeline,
         [Parameter()]
         [string]$Token,
         [Parameter()]
         [string]$User
     )
-    Clear-Variable uri -ErrorAction SilentlyContinue
-    #  Clear-Variable collectionVariable -ErrorAction SilentlyContinue
-    $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
-    Write-Verbose "Baseauth: $base64AuthInfo"
-    #$ReleaseName = $ReleaseName.Replace(" ","%20")
+    begin {
+        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
+        Clear-Variable uri -ErrorAction SilentlyContinue
+    }
+    Process {
+        [uri]$uri = "https://vsrm.dev.azure.com/$CompanyName/$ProjectName/_apis/release/releases?api-version=5.0"
 
-    [uri]$uri = "https://vsrm.dev.azure.com/$CompanyName/$ReleaseName/_apis/release/releases?api-version=5.0"
-    #$uri = "https://vsrm.dev.azure.com/ogd/interne%20ict/_apis/release/releases?api-version=5.0"
-    Write-Verbose "Uri: $uri"
-    $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
+        $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
 
 
-    $ReleaseValues = $Result.value
-    Write-Verbose "Projects: "
+        $Releases = $Result.value
 
-    $Releases = New-Object System.Collections.ArrayList
-    foreach ($Release in $ReleaseValues) {
-        $Properties = [ordered] @{
-            Name           = $Release.Name
-            ID             = $Release.id
-            SourceRelease  = $Release.releasedefinition.name
-            Status         = $Release.Status
-            CreatedOn      = $Release.CreatedOn
-            ModifiedOn     = $Release.ModifiedOn
-            ModifiedBy     = $Release.ModifiedBy.uniqueName
-            CreatedBy      = $Release.createdBy.uniqueName
-            Variables      = $Release.variables
-            Variablegroups = $Release.variableGroups
-            Descripton     = $Release.description
-            keepForever    = $Release.keepForever
-            Reason         = $Release.Reason
-            ProjectName    = $Release.projectreference.name
+        if ($ReleaseName) {
+            Write-Verbose "hit ReleaseName-loop"
+            $Releases = $Releases | Where-Object {$_.name -eq $ReleaseName}
+            https://vsrm.dev.azure.com/ {organization}/ {project}/_apis/release/releases/ {releaseId}?api-version=5.0
+
         }
-        $objRelease = New-Object PSOBject -Property $Properties
-        $Releases.Add($objRelease) | Out-Null
+        elseif ($Pipeline) {
+            $Releases = $Releases | Where-Object {$_.releasedefinition.name -eq $Pipeline}
 
-    }
-    Write-Verbose "releasename: $ReleaseName"
-    Write-Verbose "SourceRepo: $SourceRepo"
+        }
+        else {
+            # $Releases
 
-    if ($ReleaseName) {
-        Write-Verbose "hit ReleaseName-loop"
-        $Releases | where {$_.name -eq $ReleaseName}
-        return
+        }
     }
-    elseif ($SourceRelease) {
-        Write-Verbose "hit SourceRepo-loop"
-        $Releases | where {$_.SourceRelease -eq $SourceRelease}
-        return
-    }
-    else {
-        Write-Verbose "hit else-loop"
+    end {
+        foreach ($Release in $Releases){
+            $Release.PSObject.TypeNames.Insert(0,'PSADO.ADORelease')
+        }
         $Releases
-        return
     }
 }
 
