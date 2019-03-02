@@ -70,7 +70,7 @@
             </TableControl>
         </View>
 
-               <View>
+        <View>
             <Name>Default</Name>
             <ViewSelectedBy>
                 <TypeName>PSADO.ADOBuild</TypeName>
@@ -84,7 +84,7 @@
                         <Width>10</Width>
                     </TableColumnHeader>
                     <TableColumnHeader>
-                        <Label>Pipeline</Label>
+                        <Label>BuildDefinition</Label>
                     </TableColumnHeader>
                 </TableHeaders>
                 <TableRowEntries>
@@ -98,6 +98,34 @@
                             </TableColumnItem>
                             <TableColumnItem>
                                 <ScriptBlock>$_.Definition.Name</ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+        <View>
+            <Name>Default</Name>
+            <ViewSelectedBy>
+                <TypeName>PSADO.ADOBuildDef</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Width>11</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                    </TableColumnHeader>
+
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>id</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
                             </TableColumnItem>
                         </TableColumnItems>
                     </TableRowEntry>

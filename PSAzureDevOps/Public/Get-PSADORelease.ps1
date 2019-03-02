@@ -2,25 +2,27 @@
 function Get-PSADORelease {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
-        [string]$CompanyName,
-        [Parameter(Mandatory = $true)]
-        [string]$ProjectName,
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullorEmpty()]
+        [string]$Organization,
+        [Parameter(Mandatory = $true, Position = 1)]
+        [ValidateNotNullorEmpty()]
+        [string]$Project,
         [Parameter()]
         [string]$ReleaseName,
         [Parameter()]
         [string]$Pipeline,
+        [ValidateNotNullorEmpty()]
+        [string]$User,
         [Parameter()]
-        [string]$Token,
-        [Parameter()]
-        [string]$User
+        [ValidateNotNullorEmpty()]
+        [string]$Token
     )
-    begin {
+
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
         Clear-Variable uri -ErrorAction SilentlyContinue
-    }
-    Process {
-        [uri]$uri = "https://vsrm.dev.azure.com/$CompanyName/$ProjectName/_apis/release/releases?api-version=5.0"
+
+        [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/releases?api-version=5.0"
 
         $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
 
@@ -41,12 +43,11 @@ function Get-PSADORelease {
             # $Releases
 
         }
-    }
-    end {
+
         foreach ($Release in $Releases){
             $Release.PSObject.TypeNames.Insert(0,'PSADO.ADORelease')
         }
         $Releases
-    }
+
 }
 

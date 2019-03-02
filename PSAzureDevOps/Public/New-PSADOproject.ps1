@@ -3,9 +3,9 @@ function New-PSADOProject {
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     param(
         [Parameter(Mandatory = $true)]
-        [string]$CompanyName,
+        [string]$Organization,
         [Parameter(Mandatory = $true)]
-        [string]$ProjectName,
+        [string]$Project,
         [Parameter()]
         [string]$Description = $null,
         [Parameter()]
@@ -24,7 +24,7 @@ function New-PSADOProject {
             Get-Credential -Message "Please provide username and PAT for Azure Devops"
         }
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user, $token)))
-        [uri]$uri = "https://dev.azure.com/$CompanyName/_apis/projects?api-version=5.0"
+        [uri]$uri = "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0"
 
         Switch ($TemplateType) {
             "Agile" {$TemplateID = "adcc42ab-9882-485e-a3ed-7678f01f66bc"}
@@ -33,7 +33,7 @@ function New-PSADOProject {
         }
 
         $body = @{
-            "name"         = $ProjectName
+            "name"         = $Project
             "description"  = $Description
             "capabilities" = @{
                 "versioncontrol"  = @{
@@ -47,8 +47,8 @@ function New-PSADOProject {
     }
     Process {
         if ($PSCmdlet.ShouldProcess(
-                ("Creating new project {0}" -f $ProjectName),
-                ("Would you like to Create the project {0}?" -f $ProjectName),
+                ("Creating new project {0}" -f $Project),
+                ("Would you like to Create the project {0}?" -f $Project),
                 "Creating new project"
             )
         ) {
@@ -56,13 +56,13 @@ function New-PSADOProject {
 
         $errorpage = $result | Select-String  "Azure DevOps Services | Sign In"
         if (($null -ne $errorpage) -or ($null -eq $result)) {
-            throw "Authentication failed. Please check CompanyName, username, token and permissions"
+            throw "Authentication failed. Please check Organization, username, token and permissions"
         }
     }
         $i = 0
         Write-output "Project requested, please wait for success"
         if ($PSCmdlet.ShouldProcess(
-                ("Checking for status for {0}" -f $ProjectName)
+                ("Checking for status for {0}" -f $Project)
             )
         ) {
             do {

@@ -13,14 +13,48 @@ $Global:Guid2 = 'e5886721-4d09-4a92-8af9-1be895f0156b'
 $Global:Description2 = $null
 $Global:testurl2 = "https://dev.azure.com/$CompanyName/_apis/projects/e5886721-4d09-4a92-8af9-1be895f0156b"
 $Global:ProjectName = "Project1"
+$Global:NotExistingProject = "NotExistingProject"
 
-describe 'Testing Get-PSAdoProject' {
-    context 'testing correct input' {
+Describe "Testing Get-PSADOProject" {
+    Context "Input Organization" {
+            it 'Should run when only mandatory parameters are provided' {
+                Mock Get-PSADOApi -MockWith {
+                    @(
+                                [pscustomobject]@{
+                                    Name        = $Name1
+                                    id          = $Guid1
+                                    Description = $Description1
+                                    url         = $TestURL1
+
+                                }
+                                [pscustomobject]@{
+                                    Name        = $Name2
+                                    id          = $Name2
+                                    Description = $Description2
+                                    url         = $TestURL2
+                                }
+                            )
+                    } -ModuleName PSAzureDevOps
+                $Resultmp = Get-PSAdoProject -Organization $CompanyName
+                $Resultmp[0].Name | Should be $Name1
+                $Resultmp[1].Name | Should be $Name2
+                $Resultmp[0].id | Should be $Guid1
+                $resultmp[2].Description | should -BeNullOrEmpty
+            }
+            it 'Should throw with incorrect mandatory parameters' {
+                Mock Get-PSADOApi {
+                    Throw "Your request was unauthorized, status 401 was returned"
+                } -ModuleName PSAzureDevOps
+
+                { Get-PSAdoProject -Organization "a" } | Should throw "Your request was unauthorized, status 401 was returned"
+            }
+    }
+    Context "Input Project"{
         $script:mockCounter = 0
-        Mock Invoke-RestMethod -MockWith {
-            @{
-                Count = 1
-                value = @(
+        Mock Get-PSADOApi -MockWith {
+            $script:mockCounter ++
+            if ($script:MockCounter -le 1) {
+                @(
                     [pscustomobject]@{
                         Name        = $Name1
                         id          = $Guid1
@@ -35,156 +69,38 @@ describe 'Testing Get-PSAdoProject' {
                         url         = $TestURL2
                     }
                 )
+            }
+            else {
+                [pscustomobject]@{
+                    Name        = $Name1
+                    id          = $Guid1
+                    Description = $Description1
+                    url         = $TestURL1
 
+                }
             }
         } -ModuleName PSAzureDevOps
-        it 'Should run with only mandatory parameters' {
-            $Resultmp = Get-PSAdoProject -CompanyName "Company"
-            $Resultmp[0].Name | Should be $Name1
-            $Resultmp[1].Name | Should be $Name2
-            $Resultmp[0].id | Should be $Guid1
-            $resultmp[2].Description | should -BeNullOrEmpty
-        }
-        it 'Should run with ProjectName' {
+        it 'Should run with a ProjectName' {
             $script:mockCounter = 0
-            Mock Invoke-RestMethod -MockWith {
-                $script:mockCounter ++
-                if ($script:MockCounter -le 1) {
-                    @{
-                        Count = 1
-                        value = @(
-                            [pscustomobject]@{
-                                Name        = $Name1
-                                id          = $Guid1
-                                Description = $Description1
-                                url         = $TestURL1
-
-                            }
-                            [pscustomobject]@{
-                                Name        = $Name2
-                                id          = $Name2
-                                Description = $Description2
-                                url         = $TestURL2
-                            }
-                        )
-                    }
-                }
-                else {
-                    [pscustomobject]@{
-                        Name        = $Name1
-                        id          = $Guid1
-                        Description = $Description1
-                        url         = $TestURL1
-
-                    }
-                }
-            } -ModuleName PSAzureDevOps
-
-            $Resultbn = Get-PSAdoProject -CompanyName "Company" -ProjectName "$Name1"
+            $Resultbn = Get-PSAdoProject -Organization $CompanyName -Project "$Name1"
             $Resultbn | Should -not -BeNullOrEmpty
             $resultbn.Name | should be $Name1
         }
-    }
-
-    context 'testing incorrect input' {
-        it 'Should throw with incorrect mandatory parameters' {
-            Mock Invoke-RestMethod {
-                Throw
-            } -ModuleName PSAzureDevOps
-
-            { Get-PSAdoProject -CompanyName "@$" } | Should throw
-        }
         it 'Should throw with incorrect ProjectName' {
             $script:mockCounter = 0
-            Mock Invoke-RestMethod -MockWith {
-                $script:mockCounter ++
-                if ($script:MockCounter -le 1) {
-                    @{
-                        Count = 1
-                        value = @(
-                            [pscustomobject]@{
-                                Name        = $Name1
-                                id          = $Guid1
-                                Description = $Description1
-                                url         = $TestURL1
-                            }
-                            [pscustomobject]@{
-                                Name        = $Name2
-                                id          = $Name2
-                                Description = $Description2
-                                url         = $TestURL2
-                            }
-                        )
+            $Result = { Get-PSAdoProject -Organization  $CompanyName -Project "$NotExistingProject" }
+            $Result | Should throw "Project $NotExistingProject does not exist"
 
-                    }
-                }
-                else {
-                    [pscustomobject]@{
-                        Name        = $Name1
-                        id          = $Guid1
-                        Description = $Description1
-                        url         = $TestURL1
+        }
 
-                    }
-                }
-            } -ModuleName PSAzureDevOps
-
-            { Get-PSAdoProject -CompanyName  $CompanyName -ProjectName "bla" } | Should throw "Project bla does not exist"}
+    }
+    Context "Authentication"{
         it 'Should throw when wrong token or username are provided' {
-            Mock Invoke-RestMethod {
-                "Azure DevOps Services | Sign In"
+            Mock Get-PSADOApi {
+                Throw "Authentication failed. Please check Organization, username, token and permissions"
             } -ModuleName PSAzureDevOps
-            { Get-PSAdoProject -CompanyName $CompanyName -ProjectName $ProjectName -token "bla" } | should throw "Authentication failed. Please check CompanyName, username, token and permissions"
-
+            $Result = { Get-PSAdoProject -Organization $CompanyName -Project $ProjectName -token "bla"}
+            $Result | should throw "Authentication failed. Please check Organization, username, token and permissions"
         }
-    }
-    Context 'testing subfunctions' {
-        it 'Should ask for credentials if no token is known'{
-            $token = $null
-            mock Get-Credential { return crednetials}
-        }
-        it 'Should convert token to Base64string'{
-
-        }
-        it 'Should create an uri with the companyname'{
-
-        }
-        it 'should check for an error page'{
-
-        }
-        it 'should throw if no errorpage or result are present'{
-
-        }
-        it 'Should collect values in projects-variable'{
-
-        }
-        it 'Should run when no projectName is provided'{
-
-        }
-        it 'should run when a projectName is provided'{
-
-        }
-        it 'Should throw when a projectname doesnt exist'{
-
-        }
-        it 'Should add a type to the output for formatting'{
-
-        }
-    }
-}
-
-
-
-describe "d" {
-    it "i" {
-        $script:mockCounter = 0;
-        function Get-Something {}
-        Mock Get-Something {
-            if ($script:mockCounter -eq 0) { "a" } else {   "b"  }
-            $script:mockCounter++
-        }
-
-        Write-Host (Get-Something)
-        Write-Host (Get-Something)
     }
 }

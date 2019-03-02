@@ -1,4 +1,4 @@
-function Get-PSADOBuild {
+function Get-PSADOReleaseDefinition {
     <#
     .SYNOPSIS
     Get information about Builds for a project in Azure DevOps
@@ -6,10 +6,10 @@ function Get-PSADOBuild {
     .DESCRIPTION
     List Azure Devops Build for a project.
 
-    .PARAMETER CompanyName
+    .PARAMETER Organization
     Parameter description
 
-    .PARAMETER ProjectName
+    .PARAMETER Project
     Parameter description
 
     .PARAMETER BuildNumber
@@ -34,13 +34,13 @@ function Get-PSADOBuild {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [string]$CompanyName,
+        [string]$Organization,
         [Parameter(Mandatory = $true)]
-        [string]$ProjectName,
+        [string]$Project,
         [Parameter()]
-        [string]$BuildNumber,
+        [string]$ReleaseName,
         [Parameter()]
-        [string]$Repository,
+        [string]$ReleaseId,
         [Parameter()]
         [string]$Token,
         [Parameter()]
@@ -51,43 +51,39 @@ function Get-PSADOBuild {
         Clear-Variable uri -ErrorAction SilentlyContinue
     }
     Process {
-        [uri]$uri = "https://dev.azure.com/$companyName/$ProjectName/_apis/build/builds?api-version=5.0"
+        [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/definitions?api-version=5.1-preview.3"
         try {
         $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
         }
         catch {
-            Throw "Authentication failed. Please check CompanyName, username, token and permissions' to be"
+            Throw "Authentication failed. Please check Organization, username, token and permissions' to be"
         }
-        $Builds = $Result.value
+        $ReleaseDefs = $Result.value
 
-        if ($BuildNumber) {
-            $uri = ($Builds | Where-Object {$_.buildNumber -eq "$BuildNumber"}).url
-            if ([string]::IsNullOrEmpty($uri)){
-            Throw "Build $BuildNumber does not exist"
-            }
-            else {
-            $Builds = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
-
-            }
+        if ($ReleaseName) {
+            $ReleaseDefs = $ReleaseDefs | Where-Object {$_.Name -eq $ReleaseName}
+            if ($null -eq $ReleaseDefs){
+            Throw "BuildDefinition with name $ReleaseName does not exist"
+        }
 
         }
-        elseif ($Repository) {
-            $Builds = $Builds | Where-Object {$_.repository.name -eq $Repository}
-            if ($null -eq $Builds){
-              Throw "Builds for repository $Repository do not exist"
+        elseif ($ReleaseId) {
+            $ReleaseDefs = $ReleaseDefs | Where-Object {$_.id -eq $ReleaseId}
+            if ($null -eq $ReleaseDefs){
+              Throw "BuildDefinition with ID $ReleaseId do not exist"
             }
 
         }
         else {
-            # $Releases
+            #
 
         }
     }
     end {
-        foreach ($Build in $Builds){
-            $Build.PSObject.TypeNames.Insert(0,'PSADO.ADOBuild')
+        foreach ($ReleaseDef in $ReleaseDefs){
+            $ReleaseDef.PSObject.TypeNames.Insert(0,'PSADO.ADOBuildDef')
         }
-        $Builds
+        $ReleaseDefs
 
     }
 }
