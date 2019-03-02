@@ -1,79 +1,65 @@
 function Invoke-PSADOBuild {
     <#
     .SYNOPSIS
-    Invoke an Azure DevOps build to run
-
+    Trigger an Azure DevOps build
     .DESCRIPTION
-    List Azure Devops Build for a project.
-
+    Trigger a build to run by defining the builddefinitionName. 
+    After this command has run the build of the pipeline will be queued
     .PARAMETER Organization
-    Parameter description
-
+    The name of the Companyaccount in Azure Devops. So https://dev.azure.com/{Organization}
     .PARAMETER Project
-    Parameter description
-
-    .PARAMETER BuildNumber
-    Parameter description
-
-    .PARAMETER Repository
-    Parameter description
-
-    .PARAMETER Token
-    Parameter description
-
+    The name of the Project the release is in. So https://dev.azure.com/{Organization}/{Project}
+    .PARAMETER BuildDefinitionName
+    The name of the build definition that needs to get a new build queued
     .PARAMETER User
-    Parameter description
+    A username, with format user@Company.com
+    .PARAMETER Token
+    the PAT for the connection.
+    https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
+     .EXAMPLE
+    Invoke-PSADOBuild -Organization "Company" -Project "Project01" -BuildDefinitionName "Rep-CI"
 
-    .EXAMPLE
-    An example
-
+    Will trigger the builddefinition Rep-CI to create a new build
     .NOTES
-    General notes
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
     #>
 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullorEmpty()]
         [string]$Organization,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 1)]
+        [ValidateNotNullorEmpty()]
         [string]$Project,
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullorEmpty()]
         [string]$BuildDefinitionName,
         [Parameter()]
-        [string]$Token,
+        [ValidateNotNullorEmpty()]
+        [string]$User,
         [Parameter()]
-        [string]$User
+        [ValidateNotNullorEmpty()]
+        [string]$Token
     )
-    begin {
-        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
-        Clear-Variable uri -ErrorAction SilentlyContinue
+    $Header = New-Header -User $User -Token $Token
+
+    $BuildId = (Get-PSADOBuildDefinition -Organization $Organization -Project $Project -BuildName $BuildDefinitionName -User $User -Token $Token).Id
+    if ([string]::IsNullOrEmpty($BuildId)) {
+        Throw "BuildDefinition with name $BuildDefinitionName was not found"
     }
-
-    Process {
-        $BuildId = (Get-PSADOBuildDefinition -Organization $Organization -Project $Project -BuildName $BuildDefinitionName -User $User -Token $Token).Id
-        if ([string]::IsNullOrEmpty($BuildId)) {
-            Throw "BuildDefinition with name $BuildDefinitionName was not found"
+    $body = @{
+        "definition" = @{
+            "id" = "$BuildId"
         }
-        $body = @{
-            "definition" = @{
-                "id" = "$BuildId"
-            }
-        }
-
-
-        [uri]$uri = "https://dev.azure.com/$Organization/$Project/_apis/build/builds?api-version=5.0"
-        try {
-            $Result = Invoke-RestMethod -Uri $uri -Method POST -ContentType "application/json" -Body (convertto-json $body) -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
-        }
-        catch {
-            Throw "Authentication failed. Please check Organization, username, token and permissions' to be"
-        }
-        Write-output "Build has been queued"
-        $Status = Get-PSADOBuild -Organization $company -Project $Project -BuildNumber $Result.queue.id -User $User -Token $token
-        $Status
-
     }
-    end {
-    }
+    [uri]$uri = "https://dev.azure.com/$Organization/$Project/_apis/build/builds?api-version=5.0"
+    $Result = New-PSADOApi -Uri $uri -Header $Header -Body $body
+    Write-output "Build has been queued"
+    $Status = Get-PSADOBuild -Organization $company -Project $Project -BuildNumber $Result.queue.id -User $User -Token $token
+    $Status
 }
 

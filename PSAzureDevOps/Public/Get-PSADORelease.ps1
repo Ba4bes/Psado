@@ -1,5 +1,39 @@
 
 function Get-PSADORelease {
+        <#
+    .SYNOPSIS
+    Get information about Releases within a project in Azure DevOps
+    .DESCRIPTION
+    List Azure Devops Releases that belong to a project.
+    You can list them all, or select builds based on Buildnumbers or the source repository
+    .PARAMETER Organization
+    The name of the Companyaccount in Azure Devops. So https://dev.azure.com/{Organization}
+    .PARAMETER Project
+    The name of the Project to search within. So https://dev.azure.com/{Organization}/{Project}
+    .PARAMETER ReleaseName
+    The number of the Release that is needed
+    .PARAMETER ReleaseDefinition
+    The Definition that the release is based on.
+    .PARAMETER User
+    A username, with format user@Company.com
+    .PARAMETER Token
+    the PAT for the connection.
+    https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
+    .EXAMPLE
+    Get-PSADORelease -Organization Company -Project Project01
+
+    Shows all Releases for the project Project01 in the Organization Company
+
+    Get-PSADORelease -Organization Company -Project Project01 -ReleaseDefinition Rep01-CD
+
+    Returns all releases that have been pushed for the definition Rep01-CD
+
+    .NOTES
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
@@ -11,7 +45,7 @@ function Get-PSADORelease {
         [Parameter()]
         [string]$ReleaseName,
         [Parameter()]
-        [string]$Pipeline,
+        [string]$ReleaseDefinition,
         [ValidateNotNullorEmpty()]
         [string]$User,
         [Parameter()]
@@ -19,35 +53,22 @@ function Get-PSADORelease {
         [string]$Token
     )
 
-        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
-        Clear-Variable uri -ErrorAction SilentlyContinue
+    $Header = New-Header -User $User -Token $Token  
+    [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/releases?api-version=5.0"
 
-        [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/releases?api-version=5.0"
+    $Releases = Get-PSADOApi -Uri $Uri -Header $Header
 
-        $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
+    if ($ReleaseName) {
+        $Releases = $Releases | Where-Object {$_.name -eq $ReleaseName}
+    }
+    elseif ($ReleaseDefinition) {
+        $Releases = $Releases | Where-Object {$_.releasedefinition.name -eq $ReleaseDefinition}
+    }
 
-
-        $Releases = $Result.value
-
-        if ($ReleaseName) {
-            Write-Verbose "hit ReleaseName-loop"
-            $Releases = $Releases | Where-Object {$_.name -eq $ReleaseName}
-            https://vsrm.dev.azure.com/ {organization}/ {project}/_apis/release/releases/ {releaseId}?api-version=5.0
-
-        }
-        elseif ($Pipeline) {
-            $Releases = $Releases | Where-Object {$_.releasedefinition.name -eq $Pipeline}
-
-        }
-        else {
-            # $Releases
-
-        }
-
-        foreach ($Release in $Releases){
-            $Release.PSObject.TypeNames.Insert(0,'PSADO.ADORelease')
-        }
-        $Releases
+    foreach ($Release in $Releases) {
+        $Release.PSObject.TypeNames.Insert(0, 'PSADO.ADORelease')
+    }
+    $Releases
 
 }
 

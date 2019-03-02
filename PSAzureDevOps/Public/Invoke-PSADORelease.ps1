@@ -33,23 +33,26 @@ function Invoke-PSADORelease {
 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullorEmpty()]
         [string]$Organization,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 1)]
+        [ValidateNotNullorEmpty()]
         [string]$Project,
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullorEmpty()]
         [string]$ReleaseDefinitionName,
         [Parameter()]
-        [string]$Token,
+        [ValidateNotNullorEmpty()]
+        [string]$User,
         [Parameter()]
-        [string]$User
+        [ValidateNotNullorEmpty()]
+        [string]$Token
     )
-    begin {
+
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
         Clear-Variable uri -ErrorAction SilentlyContinue
-    }
 
-    Process {
         [int]$ReleaseId = (Get-PSADOReleaseDefinition -Organization $Organization -Project $Project -ReleaseName $ReleaseDefinitionName -User $User -Token $Token).Id
         if ([string]::IsNullOrEmpty($ReleaseId)){
             Throw "BuildDefinition with name $ReleaseDefinitionName was not found"
@@ -91,13 +94,12 @@ function Invoke-PSADORelease {
             # $Releases
 
         }
-    }
-    end {
+
         foreach ($Release in $Releases){
             $Release.PSObject.TypeNames.Insert(0,'PSADO.ADOBuild')
         }
         $Releases
 
-    }
+    
 }
 

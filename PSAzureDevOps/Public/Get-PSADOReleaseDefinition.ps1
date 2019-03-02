@@ -1,90 +1,81 @@
 function Get-PSADOReleaseDefinition {
-    <#
+     <#
     .SYNOPSIS
-    Get information about Builds for a project in Azure DevOps
-
+    Get a list of Release Definitions and their properties
     .DESCRIPTION
-    List Azure Devops Build for a project.
-
+    List Azure Devops Release Definitions that belong to a project.
+    You can list them all, or select Releases based on Releasenumber or ReleaseDefinitionID
     .PARAMETER Organization
-    Parameter description
-
+    The name of the Companyaccount in Azure Devops. So https://dev.azure.com/{Organization}
     .PARAMETER Project
-    Parameter description
-
-    .PARAMETER BuildNumber
-    Parameter description
-
-    .PARAMETER Repository
-    Parameter description
-
-    .PARAMETER Token
-    Parameter description
-
+    The name of the Project to search within. So https://dev.azure.com/{Organization}/{Project}
+    .PARAMETER ReleaseDefinitionName
+    The Name of the ReleaseDefinition
+    .PARAMETER ReleaseDefinitionID
+    The ID for the Release Definition
     .PARAMETER User
-    Parameter description
-
+    A username, with format user@Company.com
+    .PARAMETER Token
+    the PAT for the connection.
+    https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
     .EXAMPLE
-    An example
+    Get-PSADOReleaseDefinition Company Project01
 
+    Shows all Release definitions for the project Project01 in the Organization Company
+
+    Get-PSADORelease -Organization Company -Project Project01 -ReleaseDefinitionName Release01
+
+    Returns the Release definition Release01
     .NOTES
-    General notes
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
     #>
-
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullorEmpty()]
         [string]$Organization,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 1)]
+        [ValidateNotNullorEmpty()]
         [string]$Project,
         [Parameter()]
-        [string]$ReleaseName,
+        [string]$ReleaseDefinitionName,
         [Parameter()]
-        [string]$ReleaseId,
+        [string]$ReleaseDefinitionID,
         [Parameter()]
-        [string]$Token,
+        [ValidateNotNullorEmpty()]
+        [string]$User,
         [Parameter()]
-        [string]$User
+        [ValidateNotNullorEmpty()]
+        [string]$Token
     )
-    begin {
-        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
-        Clear-Variable uri -ErrorAction SilentlyContinue
-    }
-    Process {
-        [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/definitions?api-version=5.1-preview.3"
-        try {
-        $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
-        }
-        catch {
-            Throw "Authentication failed. Please check Organization, username, token and permissions' to be"
-        }
-        $ReleaseDefs = $Result.value
 
-        if ($ReleaseName) {
-            $ReleaseDefs = $ReleaseDefs | Where-Object {$_.Name -eq $ReleaseName}
-            if ($null -eq $ReleaseDefs){
-            Throw "BuildDefinition with name $ReleaseName does not exist"
-        }
+    $Header = New-Header -User $User -Token $Token
+ 
+    [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/definitions?api-version=5.1-preview.3"
 
-        }
-        elseif ($ReleaseId) {
-            $ReleaseDefs = $ReleaseDefs | Where-Object {$_.id -eq $ReleaseId}
-            if ($null -eq $ReleaseDefs){
-              Throw "BuildDefinition with ID $ReleaseId do not exist"
-            }
+    $ReleaseDefs = Get-PSADOApi -Uri $Uri -Header $Header
 
-        }
-        else {
-            #
-
+    if ($ReleaseDefinitionName) {
+        $ReleaseDefs = $ReleaseDefs | Where-Object {$_.Name -eq $ReleaseDefinitionName}
+        if ($null -eq $ReleaseDefs) {
+            Throw "ReleaseDefinition with name $ReleaseDefinitionName does not exist"
         }
     }
-    end {
-        foreach ($ReleaseDef in $ReleaseDefs){
-            $ReleaseDef.PSObject.TypeNames.Insert(0,'PSADO.ADOBuildDef')
+    elseif ($ReleaseDefinitionID) {
+        $ReleaseDefs = $ReleaseDefs | Where-Object {$_.id -eq $ReleaseDefinitionID}
+        if ($null -eq $ReleaseDefs) {
+            Throw "ReleaseDefinition with ID $ReleaseDefinitionID do not exist"
         }
-        $ReleaseDefs
-
     }
+
+    foreach ($ReleaseDef in $ReleaseDefs) {
+        $ReleaseDef.PSObject.TypeNames.Insert(0, 'PSADO.ADOReleaseDef')
+    }
+    $ReleaseDefs
+
+    
 }
 
