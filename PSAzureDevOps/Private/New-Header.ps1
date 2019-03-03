@@ -1,4 +1,29 @@
 Function New-Header {
+    <#
+    .SYNOPSIS
+    Creates a header for the connection with the Azure DevOps RestApi
+
+    .DESCRIPTION
+    Creates a header for the connection with the Azure DevOps RestApi,
+    using the provided Username and Token
+
+    .PARAMETER User
+    A username, with format user@Company.com
+    .PARAMETER Token
+    the PAT for the connection.
+    https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
+
+    .EXAMPLE
+    New-Header -User User@Company.com -token 203fn320fh3ainfaowinf23023f9n39naf89wnf9
+
+    .NOTES
+    Private function
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
+    #>
+
     param(
         [Parameter()]
         [String]$User,

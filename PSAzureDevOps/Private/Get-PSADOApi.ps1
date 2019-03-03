@@ -1,4 +1,29 @@
 Function Get-PSADOApi {
+    <#
+    .SYNOPSIS
+    function to connect with the Azure Devops RestApi with the GET-method
+
+    .DESCRIPTION
+    This function uses invoke-restmethod to connect to the Azure Devops RestApi.
+    It runs some errorhandling on the Results that are returned
+
+    .PARAMETER Uri
+    The Uri to connect to.
+
+    .PARAMETER Header
+    The Header that was created with New-Header
+
+    .EXAMPLE
+    Get-PSADOApi -Uri "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0" -Header $Header
+
+    .NOTES
+    Private function
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
+    #>
+
     Param(
         [Parameter()]
         [uri]$Uri,

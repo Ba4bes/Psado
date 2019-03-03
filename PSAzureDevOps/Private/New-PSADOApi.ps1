@@ -1,4 +1,31 @@
 Function New-PSADOApi {
+        <#
+    .SYNOPSIS
+    function to connect with the Azure Devops RestApi with the POST-method
+
+    .DESCRIPTION
+    This function uses invoke-restmethod to connect to the Azure Devops RestApi.
+    It runs some errorhandling on the Results that are returned
+
+    .PARAMETER Uri
+    The Uri to connect to.
+
+    .PARAMETER Header
+    The Header that was created with New-Header
+
+    .PARAMETER Body
+    The body that needs to be used in invoke-restmethod
+
+    .EXAMPLE
+    New-PSADOApi -Uri "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0" -Header $Header -Body $Body
+
+    .NOTES
+    Private function
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
+    #>
     Param(
         [Parameter()]
         [uri]$Uri,
