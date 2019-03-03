@@ -13,7 +13,7 @@ function Connect-PSADO {
     the PAT for the connection.
     https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
     .EXAMPLE
-    Connect-PSADO -Organization "Company" -UserName User@Company.com -token 203fn320fh3ainfaowinf23023f9n39naf89wnf9
+    Connect-PSADO -Organization "Company" -User User@Company.com -token 203fn320fh3ainfaowinf23023f9n39naf89wnf9
 
     Stores User- and Token-variable in the session so they only have to be provided once.
     .NOTES
