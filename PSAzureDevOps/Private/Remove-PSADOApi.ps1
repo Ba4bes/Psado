@@ -1,15 +1,13 @@
-Function New-PSADOApi {
+Function Remove-PSADOApi {
     Param(
         [Parameter()]
         [uri]$Uri,
         [Parameter()]
-        [hashtable]$Header,
-        [Parameter()]
-        [hashtable]$Body
+        [hashtable]$Header
 
     )
      Try {
-    $Result = Invoke-RestMethod -Uri $uri -Method POST -Body (convertto-json $body) -ContentType "application/json" -Headers $Header
+    $Result = Invoke-RestMethod -Uri $uri -Method Delete -ContentType "application/json" -Headers $Header
     }
     Catch {
         $ErrorCode = $_.Exception.Response.StatusCode.value__

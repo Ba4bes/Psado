@@ -1,86 +1,111 @@
 function New-PSADOProject {
+    <#
+    .SYNOPSIS
+    Creates a new Project in Azure Devops
 
+    .DESCRIPTION
+    This function creates a new project. You need to provide a projectName and organizationname
+    other parameters will get default values.
+    Function will keep track of status till project is created.
+
+    .PARAMETER Organization
+    The name of the Companyaccount in Azure Devops. So https://dev.azure.com/{Organization}
+    .PARAMETER Project
+    The name of the New project that needs to be created.
+    .PARAMETER Description
+    A description for the project, will be visible in Azure DevOps. Can be left empty
+    .PARAMETER SourceControlType
+    Select the SourceControltype, GIT or Tfvc. GIT is default.
+    .PARAMETER TemplateType
+    Select if Templatetype should be Agile, Scrum or CMMI
+    .PARAMETER User
+    A username, with format user@Company.com
+    .PARAMETER Token
+    the PAT for the connection.
+    https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
+    .EXAMPLE
+    New-PSADOProject -Organization Company -Project test -Description "this is a project"
+
+    Creates a project called test in the organization Company, with description "this is a project"
+    .NOTES
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
+    #>
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullorEmpty()]
         [string]$Organization,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 1)]
+        [ValidateNotNullorEmpty()]
         [string]$Project,
         [Parameter()]
         [string]$Description = $null,
         [Parameter()]
-        [validateset("Git", "Tfvc")][string]$SourceControlType = "Git",
+        [validateset("Git", "Tfvc")]
+        [string]$SourceControlType = "Git",
         [Parameter()]
-        [ValidateSet("Agile", "Scrum", "CMMI")][string]$TemplateType,
+        [ValidateSet("Agile", "Scrum", "CMMI")]
+        [string]$TemplateType = "Agile",
         [Parameter()]
-        [string]$token,
+        [ValidateNotNullorEmpty()]
+        [string]$User,
         [Parameter()]
-        [string]$User
+        [ValidateNotNullorEmpty()]
+        [string]$Token
     )
-    begin {
+    $Header = New-Header -User $User -Token $Token
+    [uri]$uri = "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0"
 
-        Clear-Variable uri -ErrorAction SilentlyContinue
-        if (-NOT $token) {
-            Get-Credential -Message "Please provide username and PAT for Azure Devops"
-        }
-        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user, $token)))
-        [uri]$uri = "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0"
-
-        Switch ($TemplateType) {
-            "Agile" {$TemplateID = "adcc42ab-9882-485e-a3ed-7678f01f66bc"}
-            "Scrum" {$TemplateID = "6b724908-ef14-45cf-84f8-768b5384da45"}
-            "CMMI" {$TemplateID = "27450541-8e31-4150-9947-dc59f998fc01"}
-        }
-
-        $body = @{
-            "name"         = $Project
-            "description"  = $Description
-            "capabilities" = @{
-                "versioncontrol"  = @{
-                    "sourceControlType" = $SourceControlType
-                }
-                "processTemplate" = @{
-                    "templateTypeId" = $TemplateID
-                }
-            }
-        }
+    #The templatetypes go by ID. Switch for readability
+    Switch ($TemplateType) {
+        "Agile" {$TemplateID = "adcc42ab-9882-485e-a3ed-7678f01f66bc"}
+        "Scrum" {$TemplateID = "6b724908-ef14-45cf-84f8-768b5384da45"}
+        "CMMI"  {$TemplateID = "27450541-8e31-4150-9947-dc59f998fc01"}
     }
-    Process {
-        if ($PSCmdlet.ShouldProcess(
-                ("Creating new project {0}" -f $Project),
-                ("Would you like to Create the project {0}?" -f $Project),
-                "Creating new project"
-            )
-        ) {
-            $Result = Invoke-RestMethod -Uri $uri -Method POST -Body (convertto-json $body) -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
 
-        $errorpage = $result | Select-String  "Azure DevOps Services | Sign In"
-        if (($null -ne $errorpage) -or ($null -eq $result)) {
-            throw "Authentication failed. Please check Organization, username, token and permissions"
-        }
-    }
-        $i = 0
-        Write-output "Project requested, please wait for success"
-        if ($PSCmdlet.ShouldProcess(
-                ("Checking for status for {0}" -f $Project)
-            )
-        ) {
-            do {
-                Write-output "."
-                $Status = Invoke-RestMethod -Uri $Result.url -Method GET -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
-                start-sleep 5
-                $i++
-            }while ($Status.Status -ne "succeeded" -and $i -le 15)
-            if ($i -ge 15) {
-                Write-Output "Something went wrong, Project has not been created"
+    $body = @{
+        "name"         = $Project
+        "description"  = $Description
+        "capabilities" = @{
+            "versioncontrol"  = @{
+                "sourceControlType" = $SourceControlType
             }
-            else {
-                Write-Output $Status
+            "processTemplate" = @{
+                "templateTypeId" = $TemplateID
             }
         }
     }
 
-    End {
+    if ($PSCmdlet.ShouldProcess(
+            ("Creating new project {0}" -f $Project),
+            ("Would you like to Create the project {0}?" -f $Project),
+            "Creating new project"
+        )
+    ) {
+        $Result = New-PSADOApi -Uri $uri -Header $Header -Body $body
 
     }
+    $i = 0
+    Write-output "Project requested, please wait for success"
+    if ($PSCmdlet.ShouldProcess(
+            ("Checking for status for {0}" -f $Project)
+        )
+    ) {
+        do {
+            Write-output "."
+            $Status = Get-PSADOApi -Uri $Result.url -Header $Header
+            start-sleep 5
+            $i++
+        }while ($Status.Status -ne "succeeded" -and $i -le 15)
+        if ($i -ge 15) {
+            Write-Output "Something went wrong, Project has not been created"
+        }
+        else {
+            Write-Output $Status
+        }
+    }
+
 }

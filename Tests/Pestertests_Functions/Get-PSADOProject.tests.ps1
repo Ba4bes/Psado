@@ -39,7 +39,8 @@ Describe "Testing Get-PSADOProject" {
                 $Resultmp[0].Name | Should be $Name1
                 $Resultmp[1].Name | Should be $Name2
                 $Resultmp[0].id | Should be $Guid1
-                $resultmp[2].Description | should -BeNullOrEmpty
+                $resultmp[2].Description | Should -BeNullOrEmpty
+                $Resultmp.Count | Should -BeExactly 2
             }
             it 'Should throw with incorrect mandatory parameters' {
                 Mock Get-PSADOApi {

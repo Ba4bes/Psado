@@ -14,6 +14,9 @@ Function Get-PSADOApi {
         if ($ErrorCode -eq "401"){
             Throw "Your request was unauthorized, status 401 was returned"
         }
+        if ($ErrorCode -eq "400"){
+            Throw "Your request returned StatusCodede: 400, Bad Request"
+        }
         else {
             Throw "Request returned error: $($_.Exception.Response)"
         }

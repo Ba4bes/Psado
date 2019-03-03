@@ -22,7 +22,7 @@ function Get-PSADOBuild {
     Get-PSADOBuild -Organization Company -Project Project01
 
     Shows all builds for the project Project01 in the Organization Company
-
+    .EXAMPLE
     Get-PSADOBuild -Organization Company -Project Project01 -Repository Repo01
 
     Returns all builds that have been queued for repository Repo01
@@ -53,7 +53,6 @@ function Get-PSADOBuild {
         [ValidateNotNullorEmpty()]
         [string]$Token
     )
-    #Clear-Variable uri -ErrorAction SilentlyContinue
     $Header = New-Header -User $User -Token $Token
     try {
         $null = Get-PSADOProject -Organization $Organization -Project $Project -User $User -Token $token
@@ -62,13 +61,7 @@ function Get-PSADOBuild {
         Throw "Can't find project with name $Project"
     }
     [uri]$uri = "https://dev.azure.com/$Organization/$Project/_apis/build/builds?api-version=5.0"
-    # try {
-    #     $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers $Header
-    # }
-    # catch {
-    #     Throw "Authentication failed. Please check Organization, username, token and permissions"
-    # }
-    # $Builds = $Result.value
+
     $Builds = Get-PSADOApi -Uri $Uri -Header $Header
 
     if (-NOT[string]::IsNullOrEmpty($BuildNumber)) {
@@ -77,8 +70,7 @@ function Get-PSADOBuild {
             Throw "Build $BuildNumber does not exist"
         }
         else {
-            # $Builds2 = Invoke-RestMethod -Uri $Builduri -Method Get -ContentType "application/json" -Headers $Header
-            $Builds = Get-PSADOApi -Uri $Builduri -Header $Header
+           $Builds = Get-PSADOApi -Uri $Builduri -Header $Header
 
         }
     }

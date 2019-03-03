@@ -23,7 +23,7 @@ function Get-PSADORelease {
     Get-PSADORelease -Organization Company -Project Project01
 
     Shows all Releases for the project Project01 in the Organization Company
-
+    .EXAMPLE
     Get-PSADORelease -Organization Company -Project Project01 -ReleaseDefinition Rep01-CD
 
     Returns all releases that have been pushed for the definition Rep01-CD
@@ -53,7 +53,7 @@ function Get-PSADORelease {
         [string]$Token
     )
 
-    $Header = New-Header -User $User -Token $Token  
+    $Header = New-Header -User $User -Token $Token
     [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/releases?api-version=5.0"
 
     $Releases = Get-PSADOApi -Uri $Uri -Header $Header

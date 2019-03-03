@@ -1,34 +1,30 @@
 function Invoke-PSADORelease {
-    <#
+       <#
     .SYNOPSIS
-    Invoke an Azure DevOps build to run
-
+    Trigger an Azure DevOps Release
     .DESCRIPTION
-    List Azure Devops Build for a project.
-
+    Trigger a Release to run by defining the ReleasedefinitionName.
+    After this command has run the release of the pipeline will be queued
     .PARAMETER Organization
-    Parameter description
-
+    The name of the Companyaccount in Azure Devops. So https://dev.azure.com/{Organization}
     .PARAMETER Project
-    Parameter description
-
-    .PARAMETER BuildNumber
-    Parameter description
-
-    .PARAMETER Repository
-    Parameter description
-
-    .PARAMETER Token
-    Parameter description
-
+    The name of the Project the release is in. So https://dev.azure.com/{Organization}/{Project}
+    .PARAMETER BuildDefinitionName
+    The name of the release definition that needs to get a new Release queued
     .PARAMETER User
-    Parameter description
+    A username, with format user@Company.com
+    .PARAMETER Token
+    the PAT for the connection.
+    https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
+     .EXAMPLE
+    Invoke-PSADORelease -Organization "Company" -Project "Project01" -ReleaseDefinitionName "Rep-CD"
 
-    .EXAMPLE
-    An example
-
+    Will trigger the Releasedefinition Rep-CI to create a new Release
     .NOTES
-    General notes
+    Author: Barbara Forbes
+    Module: PSAzureDevOps
+    https://4bes.nl
+    @Ba4bes
     #>
 
     [CmdletBinding()]
@@ -49,57 +45,61 @@ function Invoke-PSADORelease {
         [ValidateNotNullorEmpty()]
         [string]$Token
     )
+    $Header = New-Header -User $User -Token $Token
 
-        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User, $Token)))
-        Clear-Variable uri -ErrorAction SilentlyContinue
+    [int]$ReleaseId = (Get-PSADOReleaseDefinition -Organization $Organization -Project $Project -ReleaseDefinitionName $ReleaseDefinitionName -User $User -Token $Token).Id
 
-        [int]$ReleaseId = (Get-PSADOReleaseDefinition -Organization $Organization -Project $Project -ReleaseName $ReleaseDefinitionName -User $User -Token $Token).Id
-        if ([string]::IsNullOrEmpty($ReleaseId)){
-            Throw "BuildDefinition with name $ReleaseDefinitionName was not found"
-        }
-        $body = @{
-            "definitionId" = $ReleaseId
+    if ([string]::IsNullOrEmpty($ReleaseId)) {
+        Throw "BuildDefinition with name $ReleaseDefinitionName was not found"
+    }
+    $body = @{
+        "definitionId" = $ReleaseId
+    }
 
-        }
-
-
-        [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/releases?api-version=5.1-preview.8"
-        try {
-        $Result = Invoke-RestMethod -Uri $uri -Method POST -ContentType "application/json" -Body (convertto-json $body) -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
-        }
-        catch {
-            Throw "Authentication failed. Please check Organization, username, token and permissions' to be"
-        }
-        $Releases = $Result.value
-
-        if ($ReleaseNumber) {
-            $uri = ($Releases | Where-Object {$_.buildNumber -eq "$ReleaseNumber"}).url
-            if ([string]::IsNullOrEmpty($uri)){
-            Throw "Build $ReleaseNumber does not exist"
-            }
-            else {
-            $Releases = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
-
-            }
-
-        }
-        elseif ($Repository) {
-            $Releases = $Releases | Where-Object {$_.repository.name -eq $Repository}
-            if ($null -eq $Releases){
-              Throw "Builds for repository $Repository do not exist"
-            }
-
-        }
-        else {
-            # $Releases
-
-        }
-
-        foreach ($Release in $Releases){
-            $Release.PSObject.TypeNames.Insert(0,'PSADO.ADOBuild')
-        }
-        $Releases
-
-    
+    [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/releases?api-version=5.1-preview.8"
+    $Result = New-PSADOApi -Uri $uri -Header $Header -Body $body
+    Write-output "Release has been queued"
+    $Status = Get-PSADORelease -Organization $Organization -Project $Project -ReleaseName $Result.name -User $User -Token $token
+    $Status
 }
+
+# try {
+
+# $Result = Invoke-RestMethod -Uri $uri -Method POST -ContentType "application/json" -Body (convertto-json $body) -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
+# }
+# catch {
+#     Throw "Authentication failed. Please check Organization, username, token and permissions' to be"
+# }
+# $Releases = $Result.value
+
+# if ($ReleaseNumber) {
+#     $uri = ($Releases | Where-Object {$_.buildNumber -eq "$ReleaseNumber"}).url
+#     if ([string]::IsNullOrEmpty($uri)){
+#     Throw "Build $ReleaseNumber does not exist"
+#     }
+#     else {
+#     $Releases = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization = ("Basic {0}" -f $base64AuthInfo)}
+
+#     }
+
+# }
+# elseif ($Repository) {
+#     $Releases = $Releases | Where-Object {$_.repository.name -eq $Repository}
+#     if ($null -eq $Releases){
+#       Throw "Builds for repository $Repository do not exist"
+#     }
+
+# }
+# else {
+#     # $Releases
+
+# }
+
+# foreach ($Release in $Releases){
+#     $Release.PSObject.TypeNames.Insert(0,'PSADO.ADOBuild')
+# }
+# $Releases
+
+
+
 

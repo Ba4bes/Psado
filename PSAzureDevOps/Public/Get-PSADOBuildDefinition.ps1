@@ -22,8 +22,8 @@ function Get-PSADOBuildDefinition {
     Get-PSADOBuildDefinition Company Project01
 
     Shows all build definitions for the project Project01 in the Organization Company
-
-    Get-PSADOBuild -Organization Company -Project Project01 -BuildDefinitionName Build01
+    .EXAMPLE
+    Get-PSADOBuildDefinition -Organization Company -Project Project01 -BuildDefinitionName Build01
 
     Returns the build definition Build01
     .NOTES

@@ -22,8 +22,8 @@ function Get-PSADOReleaseDefinition {
     Get-PSADOReleaseDefinition Company Project01
 
     Shows all Release definitions for the project Project01 in the Organization Company
-
-    Get-PSADORelease -Organization Company -Project Project01 -ReleaseDefinitionName Release01
+    .EXAMPLE
+    Get-PSADOReleaseDefinition -Organization Company -Project Project01 -ReleaseDefinitionName Release01
 
     Returns the Release definition Release01
     .NOTES
@@ -53,7 +53,7 @@ function Get-PSADOReleaseDefinition {
     )
 
     $Header = New-Header -User $User -Token $Token
- 
+
     [uri]$uri = "https://vsrm.dev.azure.com/$Organization/$Project/_apis/release/definitions?api-version=5.1-preview.3"
 
     $ReleaseDefs = Get-PSADOApi -Uri $Uri -Header $Header
@@ -76,6 +76,6 @@ function Get-PSADOReleaseDefinition {
     }
     $ReleaseDefs
 
-    
+
 }
 

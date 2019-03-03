@@ -3,12 +3,12 @@ function Invoke-PSADOBuild {
     .SYNOPSIS
     Trigger an Azure DevOps build
     .DESCRIPTION
-    Trigger a build to run by defining the builddefinitionName. 
+    Trigger a build to run by defining the builddefinitionName.
     After this command has run the build of the pipeline will be queued
     .PARAMETER Organization
     The name of the Companyaccount in Azure Devops. So https://dev.azure.com/{Organization}
     .PARAMETER Project
-    The name of the Project the release is in. So https://dev.azure.com/{Organization}/{Project}
+    The name of the Project the build is in. So https://dev.azure.com/{Organization}/{Project}
     .PARAMETER BuildDefinitionName
     The name of the build definition that needs to get a new build queued
     .PARAMETER User
@@ -47,7 +47,7 @@ function Invoke-PSADOBuild {
     )
     $Header = New-Header -User $User -Token $Token
 
-    $BuildId = (Get-PSADOBuildDefinition -Organization $Organization -Project $Project -BuildName $BuildDefinitionName -User $User -Token $Token).Id
+    $BuildId = (Get-PSADOBuildDefinition -Organization $Organization -Project $Project -BuildDefinitionName $BuildDefinitionName -User $User -Token $Token).Id
     if ([string]::IsNullOrEmpty($BuildId)) {
         Throw "BuildDefinition with name $BuildDefinitionName was not found"
     }
@@ -59,7 +59,7 @@ function Invoke-PSADOBuild {
     [uri]$uri = "https://dev.azure.com/$Organization/$Project/_apis/build/builds?api-version=5.0"
     $Result = New-PSADOApi -Uri $uri -Header $Header -Body $body
     Write-output "Build has been queued"
-    $Status = Get-PSADOBuild -Organization $company -Project $Project -BuildNumber $Result.queue.id -User $User -Token $token
+    $Status = Get-PSADOBuild -Organization $Organization -Project $Project -BuildNumber $Result.queue.id -User $User -Token $token
     $Status
 }
 

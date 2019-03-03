@@ -18,7 +18,7 @@ function Get-PSADOProject {
     Get-PSADOProject -Organization Company
 
     Lists all the projects within the organization
-
+    .EXAMPLE
     Get-PSADOProject -Organization Company -Project Project01
 
     Returns the properties of the Project named Project01
