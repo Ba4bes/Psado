@@ -1,5 +1,8 @@
-if (get-module PSAzureDevOps){ Remove-Module PSAzureDevOps }
-Import-Module 'C:\scripts\git\Gitlab - Private\PSAzureDevOps\PSAzureDevops'
+
+$projectRoot = Resolve-Path "$PSScriptRoot\.."
+$moduleRoot = Split-Path (Resolve-Path "$projectRoot\*\*.psm1")
+$moduleName = Split-Path $moduleRoot -Leaf
+
 
 Describe 'Check comment-based help'{
     Context 'All functions should contain Get-Help'{
