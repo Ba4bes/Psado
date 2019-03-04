@@ -14,7 +14,7 @@ pr:
 
 
 pool:
-  vmImage: Hosted Windows 2019 with VS2019
+  vmImage: Hosted VS2017
 
 steps:
 - powershell: |
