@@ -14,7 +14,7 @@ pr:
 
 
 pool:
-  vmImage: Hosted VS2017
+  vmImage: VS2017
 
 steps:
 - powershell: |
