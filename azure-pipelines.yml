@@ -3,18 +3,12 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-  batch: false
-  branches:
-    include:
-    - $
+
 
 pr:
 - master
 
 
-pool:
-  vmImage: VS2017
 
 steps:
 - powershell: |
