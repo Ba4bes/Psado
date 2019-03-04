@@ -1,6 +1,6 @@
 # PSAzureDevops
 
-[![Build Status](https://dev.azure.com/Ba4bes/PSAzureDevOps/_apis/build/status/PSAzureDevOps-CI?branchName=master)](https://dev.azure.com/Ba4bes/PSAzureDevOps/_build/latest?definitionId=2&branchName=master)
+[![Build Status](https://dev.azure.com/Ba4bes/PSAzureDevOps/_apis/build/status/Ba4bes.PSAzureDevops?branchName=master)](https://dev.azure.com/Ba4bes/PSAzureDevOps/_build/latest?definitionId=4&branchName=master)
 
 PSAzureDevOps is a wrapper around the [Azure DevOps REST API](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.0) so they can be called with Powershell cmdlets.
 It focusses on the CICD-Pipeline for now, more might be coming up
