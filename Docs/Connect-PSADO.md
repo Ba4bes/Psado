@@ -8,7 +8,7 @@ schema: 2.0.0
 # Connect-PSADO
 
 ## SYNOPSIS
-Create a connection to PSADO, using a PATkey
+Create a connection to PSADO, using a PAT
 
 ## SYNTAX
 
@@ -32,7 +32,7 @@ Stores User- and Token-variable in the session so they only have to be provided 
 ## PARAMETERS
 
 ### -organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 so https://dev.azure.com/{Organization}
 
 ```yaml

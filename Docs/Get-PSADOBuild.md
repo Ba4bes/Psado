@@ -18,7 +18,7 @@ Get-PSADOBuild [-Organization] <String> [-Project] <String> [-BuildNumber <Strin
 ```
 
 ## DESCRIPTION
-List Azure Devops Builds that belong to a project.
+List Azure DevOps Builds that belong to a project.
 You can list them all, or select builds based on Buildnumbers or the source repository
 
 ## EXAMPLES
@@ -37,7 +37,7 @@ Returns all builds that have been queued for repository Repo01
 ## PARAMETERS
 
 ### -Organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 So https://dev.azure.com/{Organization}
 
 ```yaml

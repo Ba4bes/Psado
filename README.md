@@ -17,8 +17,8 @@ There is also a function provided which will store the Token and Username in the
 
 ### prerequisites
 
-- You need to have created an Azure Devops Account
-- You need to have a PAT key. See this link for Creating one: [link](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops). This is used as the token.
+- You need to have created an Azure DevOps Account
+- You need to have a PAT. See this link for Creating one: [link](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops). This is used as the token.
 
 ### Installation
 
@@ -43,7 +43,7 @@ After that you can use all the other cmdlets without providing credentials
 
 ### Create a New Project
 
-```
+```cmd
 C:\New-PSADOProject -Organization MyCompany -Project "Test" -Description "This is a test"
 
 Project requested, please wait for success
@@ -57,7 +57,7 @@ id                                   status    url                              
 
 ### Get the properties for this project
 
-```
+```cmd
 C:\> get-PSADOProject -Organization myCompany -Project "Test"
 
 id             : 5831fde7-4222-4183-8568-2db005cbed1a
@@ -75,7 +75,7 @@ lastUpdateTime : 01/01/0001 00:00:00
 
 ### Get a Releasedefinition
 
-```
+```cmd
 C:\> Get-PSADOReleaseDefinition -Organization myCompany -Project Project01
 
 id          Name
@@ -85,7 +85,7 @@ id          Name
 
 ### Trigger a Release
 
-```
+```cmd
 C:\> Invoke-PSADORelease -Organization myCompany -Project Project01 -ReleaseDefinitionName Project01-CD
 Release has been queued
 
@@ -105,8 +105,6 @@ View Change log [here](CHANGELOG.md)
 Any ideas or contributions are welcome!
 Please add an issue with your suggestions.
 
-
 ## Known Issues
 
 View known issues [here](https://github.com/Ba4bes/PSAzureDevops/issues)
-

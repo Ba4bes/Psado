@@ -18,7 +18,7 @@ Get-PSADOProject [-Organization] <String> [-Project <String>] [-User <String>] [
 ```
 
 ## DESCRIPTION
-List Azure Devops Projects
+List Azure DevOps Projects
 If a Projectname is provided, details about that project will be returned
 
 ## EXAMPLES
@@ -37,7 +37,7 @@ Returns the properties of the Project named Project01
 ## PARAMETERS
 
 ### -Organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 So https://dev.azure.com/{Organization}
 
 ```yaml

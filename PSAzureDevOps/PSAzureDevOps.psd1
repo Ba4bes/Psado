@@ -30,7 +30,7 @@
     Copyright         = '(c) Barbara Forbes. All rights reserved.'
 
     # Description of the functionality provided by this module
-    # Description = ''
+    Description       = 'A wrapper around the Azure DevOps REST API so they can be called with Powershell cmdlets.'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
@@ -79,8 +79,7 @@
         'Invoke-PSADOBuild',
         'Invoke-PSADORelease',
         'New-PSADOProject',
-        'Remove-PSADOproject'
-
+        'Remove-PSADOProject'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

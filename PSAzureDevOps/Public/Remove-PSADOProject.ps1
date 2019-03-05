@@ -1,61 +1,75 @@
 function Remove-PSADOProject {
-        <#
+    <#
     .SYNOPSIS
-    Removes a Project from Azure Devops
+    Removes a Project from Azure DevOps
+    
     .DESCRIPTION
     This function removes a project. You need to provide a projectName and organizationname
     The function will check if the project exist and remove it.
+    
     .PARAMETER Organization
-    The name of the Companyaccount in Azure Devops. So https://dev.azure.com/{Organization}
+    The name of the Companyaccount in Azure DevOps. So https://dev.azure.com/{Organization}
+    
     .PARAMETER Project
     The name of the New project that needs to be removed.
+    
     .PARAMETER User
     A username, with format user@Company.com
+    
     .PARAMETER Token
     the PAT for the connection.
     https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
+    
     .EXAMPLE
     Remove-PSADOProject -Organization Company -Project test
 
     Removes the project called test from the organization Company
+    
     .NOTES
     Author: Barbara Forbes
     Module: PSAzureDevOps
     https://4bes.nl
     @Ba4bes
     #>
+    
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param(
         [Parameter(Mandatory = $true)]
         [string]$Organization,
+    
         [Parameter(Mandatory = $true)]
         [string]$Project,
+    
         [Parameter()]
         [string]$token,
+    
         [Parameter()]
         [string]$User
     )
+    
     $Header = New-Header -User $User -Token $Token
 
     $ProjectID = (Get-PSADOProject -Organization $Organization -Project $Project -User $User -token $token).id
+    
     [uri]$uri = "https://dev.azure.com/$Organization/_apis/projects/$($projectID)?api-version=5.0"
-    if ($PSCmdlet.ShouldProcess(
+    
+    if (
+        $PSCmdlet.ShouldProcess(
             ("Project {0} wil be deleted" -f $Project),
             ("This action will DELETE project {0}, do you want to continue?" -f $Project),
             "Project deletion"
         )
     ) {
         $Result = Remove-PSADOApi -Uri $uri -Header $Header
-
         $i = 0
-        Write-output "Project removal requested, please wait for success"
+        Write-Output "Project removal requested, please wait for success"
+        
         do {
-            Write-output "."
+            Write-Output "."
             $Status = Get-PSADOApi -Uri $Result.url -Header $Header
-            start-sleep 5
+            Start-Sleep 5
             $i++
-        }while ($Status.Status -ne "succeeded" -and $i -le 15)
-
+        } while ($Status.Status -ne "succeeded" -and $i -le 15)
 
         if ($i -ge 15) {
             Write-Output "Something went wrong, Project has not been created"
@@ -64,5 +78,4 @@ function Remove-PSADOProject {
             Write-Output $Status
         }
     }
-
 }

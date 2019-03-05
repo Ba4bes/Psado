@@ -6,10 +6,11 @@ $moduleName = Split-Path $moduleRoot -Leaf
 
 Describe "General project validation: $moduleName" {
 
-    $scripts = Get-ChildItem $projectRoot -Include *.ps1,*.psm1,*.psd1 -Recurse
+    $scripts = Get-ChildItem $projectRoot -Include *.ps1, *.psm1, *.psd1 -Recurse
 
     # TestCases are splatted to the script so we need hashtables
-    $testCase = $scripts | Foreach-Object{@{file=$_}}
+    $testCase = $scripts | Foreach-Object {@{file = $_}}
+    
     It "Script <file> should be valid powershell" -TestCases $testCase {
         param($file)
 
@@ -22,6 +23,6 @@ Describe "General project validation: $moduleName" {
     }
 
     It "Module '$moduleName' can import cleanly" {
-        {Import-Module (Join-Path $moduleRoot "$moduleName.psm1") -force } | Should Not Throw
+        { Import-Module (Join-Path $moduleRoot "$moduleName.psm1") -force } | Should Not Throw
     }
 }
