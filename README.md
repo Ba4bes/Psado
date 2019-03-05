@@ -69,7 +69,7 @@ revision       : 67
 _links         : @{self=; collection=; web=}
 visibility     : private
 defaultTeam    : @{id=506e9664-d5c4-4d87-a84c-69bceb3be167; name=Test Team;
-                 url=https://dev.azure.com/Ba4bes/_apis/projects/5831fde7-4222-4183-8568-2db005cbed1a/teams/506e9664-d5c4-4d87-a84c-69bceb3be167}
+                 url=https://dev.azure.com/MyCompany/_apis/projects/5831fde7-4222-4183-8568-2db005cbed1a/teams/506e9664-d5c4-4d87-a84c-69bceb3be167}
 lastUpdateTime : 01/01/0001 00:00:00
 ```
 
