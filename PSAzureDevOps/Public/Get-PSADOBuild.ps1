@@ -70,15 +70,24 @@ function Get-PSADOBuild {
             Throw "Build $BuildNumber does not exist"
         }
         else {
-           $Builds = Get-PSADOApi -Uri $Builduri -Header $Header
+            $Builds = Get-PSADOApi -Uri $Builduri -Header $Header
 
         }
     }
     if (-NOT[string]::IsNullOrEmpty($Repository)) {
-        $Builds = $Builds | Where-Object {$_.repository.name -eq $Repository}
-        if ($null -eq $Builds) {
+        $AllBuilds = New-Object System.Collections.Generic.List[System.Object]
+        foreach ($Build in $Builds) {
+            if ($Build.repository.type -eq "Github" -and $Build.repository.id -eq "$Repository") {
+                $AllBuilds.Add($Build)
+            }
+            if ($Build.repository.type -eq "TfsGit" -and $Build.repository.name -eq "$Repository") {
+                $AllBuilds.Add($Build)
+            }
+        }
+        if ($null -eq $AllBuilds) {
             Throw "Builds for repository $Repository do not exist"
         }
+        $Builds = $AllBuilds
     }
     foreach ($Build in $Builds) {
         $Build.PSObject.TypeNames.Insert(0, 'PSADO.ADOBuild')
