@@ -2,29 +2,29 @@ function Get-PSADOProject {
     <#
     .SYNOPSIS
     Get a list of projects or a single project in Azure DevOps
-    
+
     .DESCRIPTION
     List Azure DevOps Projects
     If a Projectname is provided, details about that project will be returned
-    
-    .PARAMETER Organization
-    The name of the Companyaccount in Azure DevOps. So https://dev.azure.com/{Organization}
-    
+
     .PARAMETER Project
     The name of the Project to search for. So https://dev.azure.com/{Organization}/{Project}
-    
+
+    .PARAMETER Organization
+    The name of the Companyaccount in Azure DevOps. So https://dev.azure.com/{Organization}
+
     .PARAMETER User
     A username, with format user@Company.com
-    
+
     .PARAMETER Token
     The PAT for the connection.
     https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
-    
+
     .EXAMPLE
     Get-PSADOProject -Organization Company
 
     Lists all the projects within the organization
-    
+
     .EXAMPLE
     Get-PSADOProject -Organization Company -Project Project01
 
@@ -36,20 +36,20 @@ function Get-PSADOProject {
     https://4bes.nl
     @Ba4bes
     #>
-    
+
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [ValidateNotNullorEmpty()]
-        [string]$Organization,
-    
         [Parameter()]
         [string]$Project,
-    
+
+        [Parameter()]
+        [ValidateNotNullorEmpty()]
+        [string]$Organization,
+
         [Parameter()]
         [ValidateNotNullorEmpty()]
         [string]$User,
-    
+
         [Parameter()]
         [ValidateNotNullorEmpty()]
         [string]$Token
@@ -58,7 +58,7 @@ function Get-PSADOProject {
     $Header = New-Header -User $User -Token $Token
 
     [uri]$uri = "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0"
-    
+
     $Projects = Get-PSADOApi -Uri $Uri -Header $Header
 
     if (-not [string]::IsNullOrEmpty($Project)) {
@@ -70,7 +70,7 @@ function Get-PSADOProject {
             $Projects = Get-PSADOApi -Uri $ProjectUri -Header $Header
         }
     }
-    
+
     foreach ($Project in $Projects) {
         $Project.PSObject.TypeNames.Insert(0, 'PSADO.ADOProject')
     }

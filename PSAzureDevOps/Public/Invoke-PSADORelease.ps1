@@ -2,32 +2,32 @@ function Invoke-PSADORelease {
     <#
     .SYNOPSIS
     Trigger an Azure DevOps Release
-    
+
     .DESCRIPTION
     Trigger a Release to run by defining the ReleasedefinitionName.
     After this command has run the release of the pipeline will be queued
-    
-    .PARAMETER Organization
-    The name of the Companyaccount in Azure DevOps. So https://dev.azure.com/{Organization}
-    
+
     .PARAMETER Project
     The name of the Project the release is in. So https://dev.azure.com/{Organization}/{Project}
-    
+
     .PARAMETER BuildDefinitionName
     The name of the release definition that needs to get a new Release queued
-    
+
+    .PARAMETER Organization
+    The name of the Companyaccount in Azure DevOps. So https://dev.azure.com/{Organization}
+
     .PARAMETER User
     A username, with format user@Company.com
-    
+
     .PARAMETER Token
     the PAT for the connection.
     https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops
-    
+
     .EXAMPLE
     Invoke-PSADORelease -Organization "Company" -Project "Project01" -ReleaseDefinitionName "Rep-CD"
 
     Will trigger the Releasedefinition Rep-CI to create a new Release
-    
+
     .NOTES
     Author: Barbara Forbes
     Module: PSAzureDevOps
@@ -39,25 +39,25 @@ function Invoke-PSADORelease {
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateNotNullorEmpty()]
-        [string]$Organization,
-    
-        [Parameter(Mandatory = $true, Position = 1)]
-        [ValidateNotNullorEmpty()]
         [string]$Project,
-    
+
         [Parameter(Mandatory = $true)]
         [ValidateNotNullorEmpty()]
         [string]$ReleaseDefinitionName,
-    
+
+        [Parameter()]
+        [ValidateNotNullorEmpty()]
+        [string]$Organization,
+
         [Parameter()]
         [ValidateNotNullorEmpty()]
         [string]$User,
-    
+
         [Parameter()]
         [ValidateNotNullorEmpty()]
         [string]$Token
     )
-    
+
     $Header = New-Header -User $User -Token $Token
 
     [int]$ReleaseId = (Get-PSADOReleaseDefinition -Organization $Organization -Project $Project -ReleaseDefinitionName $ReleaseDefinitionName -User $User -Token $Token).Id
@@ -65,7 +65,7 @@ function Invoke-PSADORelease {
     if ([string]::IsNullOrEmpty($ReleaseId)) {
         throw "BuildDefinition with name $ReleaseDefinitionName was not found"
     }
-    
+
     $body = @{
         "definitionId" = $ReleaseId
     }
