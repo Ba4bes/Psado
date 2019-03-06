@@ -1,8 +1,4 @@
-$projectRoot = Resolve-Path "$PSScriptRoot\.."
-$moduleRoot = Split-Path (Resolve-Path "$projectRoot\*\*.psm1")
-$moduleName = Split-Path $moduleRoot -Leaf
-
-Describe 'Check comment-based help' {
+Describe 'Check Comment-based help' {
     Context 'All functions should contain Comment-based Help' {
         $Commands = (Get-Module PSAzureDevOps).ExportedCommands
         
@@ -12,7 +8,7 @@ Describe 'Check comment-based help' {
             }
         }
 
-        It "<Function> should contain Comment-based Help" -TestCases $TestCases {
+        It "<Function> should contain Comment-based Help - Synopsis" -TestCases $TestCases {
             param(
                 $Function
             )
@@ -20,11 +16,19 @@ Describe 'Check comment-based help' {
             $Help = Get-Help $Function
 
             $Help.Synopsis | Should -Not -BeNullOrEmpty
-            $Help.Description | Should -Not -BeNullOrEmpty
-            $Help.Examples | Should -Not -BeNullOrEmpty
         }
 
-        It "Script <Function> should contain Examples" -TestCases $TestCases {
+        It "<Function> should contain Comment-based Help - Description" -TestCases $TestCases {
+            param(
+                $Function
+            )
+
+            $Help = Get-Help $Function
+
+            $Help.Description | Should -Not -BeNullOrEmpty
+        }
+        
+        It "<Function> should contain Comment-based Help - Synopsis" -TestCases $TestCases {
             param(
                 $Function
             )

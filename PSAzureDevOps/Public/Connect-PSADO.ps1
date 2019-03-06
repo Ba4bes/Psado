@@ -33,7 +33,7 @@ function Connect-PSADO {
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullorEmpty()]
-        [string]$organization,
+        [string]$Organization,
     
         [Parameter(Mandatory = $true)]
         [ValidateNotNullorEmpty()]

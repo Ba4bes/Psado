@@ -41,7 +41,7 @@ function Remove-PSADOProject {
         [string]$Project,
     
         [Parameter()]
-        [string]$token,
+        [string]$Token,
     
         [Parameter()]
         [string]$User
