@@ -14,7 +14,7 @@ Describe "General project validation: $moduleName" {
             file = $_
         }
     }
-    
+
     It "Script <file> should exist" -TestCases $testCase {
         param($file)
 
@@ -24,7 +24,7 @@ Describe "General project validation: $moduleName" {
     It "Script <file> can be read without errors" -TestCases $testCase {
         param($file)
 
-        $null = Get-Content -Path $file.fullname -ErrorAction Stop | Should -Not -Throw
+        { $null = Get-Content -Path $file.fullname -ErrorAction Stop } | Should -Not -Throw
     }
 
     It "Script <file> should be valid powershell" -TestCases $testCase {
