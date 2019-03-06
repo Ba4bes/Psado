@@ -18,7 +18,7 @@ Get-PSADOReleaseDefinition [-Organization] <String> [-Project] <String> [-Releas
 ```
 
 ## DESCRIPTION
-List Azure Devops Release Definitions that belong to a project.
+List Azure DevOps Release Definitions that belong to a project.
 You can list them all, or select Releases based on Releasenumber or ReleaseDefinitionID
 
 ## EXAMPLES
@@ -37,7 +37,7 @@ Returns the Release definition Release01
 ## PARAMETERS
 
 ### -Organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 So https://dev.azure.com/{Organization}
 
 ```yaml

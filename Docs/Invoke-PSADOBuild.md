@@ -33,7 +33,7 @@ Will trigger the builddefinition Rep-CI to create a new build
 ## PARAMETERS
 
 ### -Organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 So https://dev.azure.com/{Organization}
 
 ```yaml

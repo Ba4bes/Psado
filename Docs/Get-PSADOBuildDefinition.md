@@ -18,7 +18,7 @@ Get-PSADOBuildDefinition [-Organization] <String> [-Project] <String> [-BuildDef
 ```
 
 ## DESCRIPTION
-List Azure Devops Builds Definitions that belong to a project.
+List Azure DevOps Builds Definitions that belong to a project.
 You can list them all, or select builds based on Builnumber or BuildDefinitionID
 
 ## EXAMPLES
@@ -37,7 +37,7 @@ Returns the build definition Build01
 ## PARAMETERS
 
 ### -Organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 So https://dev.azure.com/{Organization}
 
 ```yaml

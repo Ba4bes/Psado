@@ -24,10 +24,10 @@ steps:
    $Results = Invoke-Pester -PassThru
 
    if ($Results.FailedCount -ne "0"){
-       Throw "a PesterTest has failed"
+        throw "a PesterTest has failed"
    }
    if ($Results.PassedCount -eq "0"){
-       Throw "There was no passed PesterTest"
+        throw "There was no passed PesterTest"
    }
   failOnStderr: true
   displayName: 'Invoke-Pester'

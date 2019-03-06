@@ -8,7 +8,7 @@ schema: 2.0.0
 # New-PSADOProject
 
 ## SYNOPSIS
-Creates a new Project in Azure Devops
+Creates a new Project in Azure DevOps
 
 ## SYNTAX
 
@@ -36,7 +36,7 @@ Creates a project called test in the organization Company, with description "thi
 ## PARAMETERS
 
 ### -Organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 So https://dev.azure.com/{Organization}
 
 ```yaml

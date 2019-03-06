@@ -18,7 +18,7 @@ Get-PSADORelease [-Organization] <String> [-Project] <String> [-ReleaseName <Str
 ```
 
 ## DESCRIPTION
-List Azure Devops Releases that belong to a project.
+List Azure DevOps Releases that belong to a project.
 You can list them all, or select builds based on Buildnumbers or the source repository
 
 ## EXAMPLES
@@ -37,7 +37,7 @@ Returns all releases that have been pushed for the definition Rep01-CD
 ## PARAMETERS
 
 ### -Organization
-The name of the Companyaccount in Azure Devops.
+The name of the Companyaccount in Azure DevOps.
 So https://dev.azure.com/{Organization}
 
 ```yaml
