@@ -27,7 +27,7 @@ function Remove-PSADOProject {
 
     .NOTES
     Author: Barbara Forbes
-    Module: PSAzureDevOps
+    Module: Psado
     https://4bes.nl
     @Ba4bes
     #>

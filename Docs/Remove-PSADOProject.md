@@ -1,6 +1,6 @@
 ---
-external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevOps
+external help file: Psado-help.xml
+Module Name: Psado
 online version:
 schema: 2.0.0
 ---

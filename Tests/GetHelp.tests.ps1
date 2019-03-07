@@ -1,6 +1,6 @@
 Describe 'Check Comment-based help' {
     Context 'All functions should contain Comment-based Help' {
-        $Commands = (Get-Module PSAzureDevOps).ExportedCommands
+        $Commands = (Get-Module Psado).ExportedCommands
         
         $TestCases = $Commands.Values | Foreach-Object {
             @{
