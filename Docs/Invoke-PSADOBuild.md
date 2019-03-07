@@ -1,6 +1,6 @@
 ---
 external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevops
+Module Name: PSAzureDevOps
 online version:
 schema: 2.0.0
 ---
@@ -13,7 +13,7 @@ Trigger an Azure DevOps build
 ## SYNTAX
 
 ```
-Invoke-PSADOBuild [-Organization] <String> [-Project] <String> -BuildDefinitionName <String> [-User <String>]
+Invoke-PSADOBuild [-Project] <String> -BuildDefinitionName <String> [-Organization <String>] [-User <String>]
  [-Token <String>] [<CommonParameters>]
 ```
 
@@ -32,22 +32,6 @@ Will trigger the builddefinition Rep-CI to create a new build
 
 ## PARAMETERS
 
-### -Organization
-The name of the Companyaccount in Azure DevOps.
-So https://dev.azure.com/{Organization}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Project
 The name of the Project the build is in.
 So https://dev.azure.com/{Organization}/{Project}
@@ -58,7 +42,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 2
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -73,6 +57,22 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Organization
+The name of the Companyaccount in Azure DevOps.
+So https://dev.azure.com/{Organization}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False

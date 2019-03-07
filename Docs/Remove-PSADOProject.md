@@ -1,6 +1,6 @@
 ---
 external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevops
+Module Name: PSAzureDevOps
 online version:
 schema: 2.0.0
 ---
@@ -13,8 +13,8 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Remove-PSADOProject [-Organization] <String> [-Project] <String> [[-token] <String>] [[-User] <String>]
- [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-PSADOProject [-Project] <String> [-Organization <String>] [-Token <String>] [-User <String>] [-WhatIf]
+ [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,36 +31,6 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Organization
-{{Fill Organization Description}}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Project
 {{Fill Project Description}}
 
@@ -76,6 +46,36 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Organization
+{{Fill Organization Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Token
+{{Fill token Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -User
 {{Fill User Description}}
 
@@ -85,7 +85,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -107,16 +107,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -token
-{{Fill token Description}}
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: cf
 
 Required: False
-Position: 2
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

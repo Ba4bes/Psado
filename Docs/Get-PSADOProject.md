@@ -1,6 +1,6 @@
 ---
 external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevops
+Module Name: PSAzureDevOps
 online version:
 schema: 2.0.0
 ---
@@ -13,7 +13,7 @@ Get a list of projects or a single project in Azure DevOps
 ## SYNTAX
 
 ```
-Get-PSADOProject [-Organization] <String> [-Project <String>] [-User <String>] [-Token <String>]
+Get-PSADOProject [[-Project] <String>] [[-Organization] <String>] [[-User] <String>] [[-Token] <String>]
  [<CommonParameters>]
 ```
 
@@ -36,22 +36,6 @@ Returns the properties of the Project named Project01
 
 ## PARAMETERS
 
-### -Organization
-The name of the Companyaccount in Azure DevOps.
-So https://dev.azure.com/{Organization}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Project
 The name of the Project to search for.
 So https://dev.azure.com/{Organization}/{Project}
@@ -62,7 +46,23 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Organization
+The name of the Companyaccount in Azure DevOps.
+So https://dev.azure.com/{Organization}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -77,7 +77,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -93,7 +93,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 4
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

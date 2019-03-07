@@ -1,6 +1,6 @@
 ---
 external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevops
+Module Name: PSAzureDevOps
 online version:
 schema: 2.0.0
 ---
@@ -13,7 +13,7 @@ Create a connection to PSADO, using a PAT
 ## SYNTAX
 
 ```
-Connect-PSADO [-organization] <String> [-User] <String> [-Token] <String> [<CommonParameters>]
+Connect-PSADO [-Organization] <String> [-User] <String> [-Token] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,7 +31,7 @@ Stores User- and Token-variable in the session so they only have to be provided 
 
 ## PARAMETERS
 
-### -organization
+### -Organization
 The name of the Companyaccount in Azure DevOps.
 so https://dev.azure.com/{Organization}
 

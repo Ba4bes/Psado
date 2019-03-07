@@ -1,6 +1,6 @@
 ---
 external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevops
+Module Name: PSAzureDevOps
 online version:
 schema: 2.0.0
 ---
@@ -13,8 +13,8 @@ Get information about Releases within a project in Azure DevOps
 ## SYNTAX
 
 ```
-Get-PSADORelease [-Organization] <String> [-Project] <String> [-ReleaseName <String>]
- [-ReleaseDefinition <String>] [-User <String>] [-Token <String>] [<CommonParameters>]
+Get-PSADORelease [-Project] <String> [-ReleaseName <String>] [-ReleaseDefinition <String>]
+ [-Organization <String>] [-User <String>] [-Token <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,22 +36,6 @@ Returns all releases that have been pushed for the definition Rep01-CD
 
 ## PARAMETERS
 
-### -Organization
-The name of the Companyaccount in Azure DevOps.
-So https://dev.azure.com/{Organization}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Project
 The name of the Project to search within.
 So https://dev.azure.com/{Organization}/{Project}
@@ -62,7 +46,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 2
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -85,6 +69,22 @@ Accept wildcard characters: False
 
 ### -ReleaseDefinition
 The Definition that the release is based on.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Organization
+The name of the Companyaccount in Azure DevOps.
+So https://dev.azure.com/{Organization}
 
 ```yaml
 Type: String

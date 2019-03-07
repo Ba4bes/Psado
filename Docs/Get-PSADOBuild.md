@@ -1,6 +1,6 @@
 ---
 external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevops
+Module Name: PSAzureDevOps
 online version:
 schema: 2.0.0
 ---
@@ -13,7 +13,7 @@ Get information about Builds within a project in Azure DevOps
 ## SYNTAX
 
 ```
-Get-PSADOBuild [-Organization] <String> [-Project] <String> [-BuildNumber <String>] [-Repository <String>]
+Get-PSADOBuild [-Project] <String> [-BuildNumber <String>] [-Repository <String>] [-Organization <String>]
  [-User <String>] [-Token <String>] [<CommonParameters>]
 ```
 
@@ -36,22 +36,6 @@ Returns all builds that have been queued for repository Repo01
 
 ## PARAMETERS
 
-### -Organization
-The name of the Companyaccount in Azure DevOps.
-So https://dev.azure.com/{Organization}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Project
 The name of the Project to search within.
 So https://dev.azure.com/{Organization}/{Project}
@@ -62,7 +46,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 2
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -85,6 +69,22 @@ Accept wildcard characters: False
 
 ### -Repository
 The Name of the source repository that is configured to use the build
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Organization
+The name of the Companyaccount in Azure DevOps.
+So https://dev.azure.com/{Organization}
 
 ```yaml
 Type: String
