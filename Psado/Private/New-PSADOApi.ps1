@@ -1,7 +1,7 @@
-Function Get-PSADOApi {
+Function New-PSADOApi {
     <#
     .SYNOPSIS
-    Function to connect with the Azure DevOps REST Api with the GET-method
+    Function to connect with the Azure DevOps REST API with the POST-method
 
     .DESCRIPTION
     This function uses invoke-restmethod to connect to the Azure DevOps REST API.
@@ -13,26 +13,30 @@ Function Get-PSADOApi {
     .PARAMETER Header
     The Header that was created with New-Header
 
+    .PARAMETER Body
+    The body that needs to be used in invoke-restmethod
+
     .EXAMPLE
-    Get-PSADOApi -Uri "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0" -Header $Header
+    New-PSADOApi -Uri "https://dev.azure.com/$Organization/_apis/projects?api-version=5.0" -Header $Header -Body $Body
 
     .NOTES
     Private function
     Author: Barbara Forbes
-    Module: PSAzureDevOps
+    Module: Psado
     https://4bes.nl
     @Ba4bes
     #>
-
     Param(
         [Parameter()]
         [uri]$Uri,
         [Parameter()]
-        [hashtable]$Header
+        [hashtable]$Header,
+        [Parameter()]
+        [hashtable]$Body
     )
 
     Try {
-        $Result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers $Header
+        $Result = Invoke-RestMethod -Uri $uri -Method POST -Body (ConvertTo-Json $body) -ContentType "application/json" -Headers $Header
     }
     Catch {
         $ErrorCode = $_.Exception.Response.StatusCode.value__

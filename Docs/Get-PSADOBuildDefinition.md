@@ -1,6 +1,6 @@
 ---
-external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevOps
+external help file: Psado-help.xml
+Module Name: Psado
 online version:
 schema: 2.0.0
 ---
@@ -138,7 +138,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## NOTES
 Author: Barbara Forbes
-Module: PSAzureDevOps
+Module: Psado
 https://4bes.nl
 @Ba4bes
 

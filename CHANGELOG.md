@@ -7,10 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2019-03-07
 
 ### Added
-- [#8](https://github.com/Ba4bes/PSAzureDevOps/issues/8) When Connect-PSADO is used, The Organization-parameter is saved
+- [#8](https://github.com/Ba4bes/Psado/issues/8) When Connect-PSADO is used, The Organization-parameter is saved
 
 ### Fixed
-- [#4](https://github.com/Ba4bes/PSAzureDevOps/issues/4) Get-PSADOBuild works for Github repositories
+- [#4](https://github.com/Ba4bes/Psado/issues/4) Get-PSADOBuild works for Github repositories
 
 ## [0.0.1] - 2019-03-07
 

@@ -1,8 +1,8 @@
-# PSAzureDevops
+# Psado
 
-[![Build Status](https://dev.azure.com/Ba4bes/PSAzureDevOps/_apis/build/status/Ba4bes.PSAzureDevops?branchName=master)](https://dev.azure.com/Ba4bes/PSAzureDevOps/_build/latest?definitionId=4&branchName=master)
+[![Build Status](https://dev.azure.com/Ba4bes/Psado/_apis/build/status/Ba4bes.Psado?branchName=master)](https://dev.azure.com/Ba4bes/Psado/_build/latest?definitionId=4&branchName=master)
 
-PSAzureDevOps is a wrapper around the [Azure DevOps REST API](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.0) so they can be called with Powershell cmdlets.
+Psado stands for PowerShell Azure DevOps. It is a wrapper around the [Azure DevOps REST API](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.0) so they can be called with Powershell cmdlets.
 It focusses on the CICD-Pipeline for now, more might be coming up
 
 With the module just getting started, you are now able to:
@@ -22,11 +22,11 @@ There is also a function provided which will store the Token and Username in the
 
 ### Installation
 
-Install PSAzureDevOps from the [PowerShell Gallery](https://powershellgallery.com):
+Install Psado from the [PowerShell Gallery](https://powershellgallery.com):
 
 ```powershell
-Install-Module -Name PSAzureDevOps -Scope CurrentUser
-Import-Module PSAzureDevOps
+Install-Module -Name Psado -Scope CurrentUser
+Import-Module Psado
 ```
 
 ### Create Connection
@@ -107,4 +107,4 @@ Please add an issue with your suggestions.
 
 ## Known Issues
 
-View known issues [here](https://github.com/Ba4bes/PSAzureDevops/issues)
+View known issues [here](https://github.com/Ba4bes/Psado/issues)
