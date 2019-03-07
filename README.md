@@ -58,7 +58,7 @@ id                                   status    url                              
 ### Get the properties for this project
 
 ```cmd
-C:\> get-PSADOProject -Organization myCompany -Project "Test"
+C:\> get-PSADOProject -Project "Test"
 
 id             : 5831fde7-4222-4183-8568-2db005cbed1a
 name           : Test
@@ -76,7 +76,7 @@ lastUpdateTime : 01/01/0001 00:00:00
 ### Get a Releasedefinition
 
 ```cmd
-C:\> Get-PSADOReleaseDefinition -Organization myCompany -Project Project01
+C:\> Get-PSADOReleaseDefinition -Project Project01
 
 id          Name
 --          ----

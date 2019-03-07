@@ -1,6 +1,6 @@
 ---
 external help file: PSAzureDevOps-help.xml
-Module Name: PSAzureDevops
+Module Name: PSAzureDevOps
 online version:
 schema: 2.0.0
 ---
@@ -13,8 +13,8 @@ Creates a new Project in Azure DevOps
 ## SYNTAX
 
 ```
-New-PSADOProject [-Organization] <String> [-Project] <String> [-Description <String>]
- [-SourceControlType <String>] [-TemplateType <String>] [-User <String>] [-Token <String>] [-WhatIf] [-Confirm]
+New-PSADOProject [-Project] <String> [-Description <String>] [-SourceControlType <String>]
+ [-TemplateType <String>] [-Organization <String>] [-User <String>] [-Token <String>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
@@ -35,22 +35,6 @@ Creates a project called test in the organization Company, with description "thi
 
 ## PARAMETERS
 
-### -Organization
-The name of the Companyaccount in Azure DevOps.
-So https://dev.azure.com/{Organization}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Project
 The name of the New project that needs to be created.
 
@@ -60,7 +44,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 2
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -100,6 +84,22 @@ Accept wildcard characters: False
 
 ### -TemplateType
 Select if Templatetype should be Agile, Scrum or CMMI
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Organization
+The name of the Companyaccount in Azure DevOps.
+So https://dev.azure.com/{Organization}
 
 ```yaml
 Type: String
